@@ -48,10 +48,15 @@ const App = () => {
   const dispatch = useDispatch();
 
   const handleClick = () => {
+    dispatch(startrequestinfData())
     fetch('/some-data')
       .then((res) => res.json())
-      .then((data) => {})
-      .catch((err) => {});
+      .then((data) => {
+        dispatch(receiveData(data))
+      })
+      .catch((err) => {
+        dispatch(failToRetrieveData())
+      });
   };
 
   return <button onClick={handleClick}>Do something</button>;
@@ -84,13 +89,17 @@ const App = () => {
       .then((res) => res.json())
       .then((scores) => {
         // TODO
+        dispatch(receiveHockeyScores(scores))
       });
 
     fetch('/baseball')
       .then((res) => res.json())
       .then((scores) => {
         // TODO
+                dispatch(receiveHBaseBallScores(scores))
+
       });
+      //add error fetch?
   }, []);
 
   return <Scores />;
@@ -115,15 +124,52 @@ const App = () => {
 
   React.useEffect(() => {
     // Dispatch `receiveAllScores` after BOTH fetches have completed
+    let numOfCompletedRequests = 0;
 
-    fetch('/hockey').then((scores) => {
+    fetch('/hockey')
+    .then(res => (res.json))
+    .then((scores) => {
+      dispatch(receiveHockeyScores(scores));
+      numOfCompletedRequests++
+      if(numOfCompletedRequests === 2) {
+        dispatch(receiveAllData())
+      }
+    });
+
+    fetch('/baseball')
+    .then(res => (res.json))
+    .then((scores) => {
+      dispatch(receiveBaseballScores(scores));
+      numOfCompletedRequests++
+          if(numOfCompletedRequests === 2) {
+        dispatch(receiveAllData())
+      }
+    });
+  }, []);
+
+  // -------------------
+
+  React.useEffect(() => {
+    // Dispatch `receiveAllScores` after BOTH fetches have completed
+    let numOfCompletedRequests = 0;
+
+    const hockeyPromise = fetch('/hockey')
+    .then(res => (res.json))
+    .then((scores) => {
       dispatch(receiveHockeyScores(scores));
     });
 
-    fetch('/baseball').then((scores) => {
+    const baseballPromise =fetch('/baseball')
+    .then(res => (res.json))
+    .then((scores) => {
       dispatch(receiveBaseballScores(scores));
     });
+
+    Promise.all([hockeyPromise,baseballPromise])
+    .then(data => (dispatch(receiveDataAll)))
   }, []);
+
+  //other way
 
   return <Scores />;
 };
