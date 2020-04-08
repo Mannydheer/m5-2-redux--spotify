@@ -30,13 +30,13 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-loader-spinner": "^3.1.5",
-    "react-play-button": "0.2.2",
+    "react-play-button": "^0.2.2",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "2.1.8",
     "react-spring": "^9.0.0-beta.6",
     "redux": "^4.0.5",
-    "styled-components": "^4.2.0"
+    "styled-components": "^5.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.7",

@@ -8,6 +8,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { requestAccessToken, receiveAccessToken, receiveAccessTokenError } from '../../action';
 import ArtistRoute from '../ArtistRoute/ArtistRoute';
+import GlobalStyles from '../GlobalStyles';
 
 const DEFAULT_ARTISTS_ID = '3TVXtAsR1Inumwj472S9r4';
 
@@ -44,6 +45,7 @@ const App = () => {
 
 
   return <Router>
+    <GlobalStyles></GlobalStyles>
     <Switch>
       <Route exact path="/artists/:id">
         <ArtistRoute DEFAULT_ARTISTS_ID={DEFAULT_ARTISTS_ID}></ArtistRoute>

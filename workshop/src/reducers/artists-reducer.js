@@ -19,13 +19,26 @@ export default function artistsReducer(state = initialState,
             stateCopy.currentArtist.profile = action.artist
             return {
                 ...stateCopy,
-                status: 'success',
+                // status: 'success',
             }
         }
         case 'UPDATE_CURRENT_ARTIST_ERROR': {
             return {
                 ...state,
                 status: 'error'
+            }
+        }
+        case 'RECEIVE_TOP_TRACKS': {
+            let stateCopy = { ...state }
+            stateCopy.currentArtist.tracks = action.tracks
+            return {
+                ...stateCopy,
+            }
+        }
+        case 'UPDATE_ALL_ARTIST_INFO': {
+            return {
+                ...state,
+                status: 'idle'
             }
         }
         default: {

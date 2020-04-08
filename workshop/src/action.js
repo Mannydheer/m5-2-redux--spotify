@@ -22,6 +22,20 @@ export const updateCurrentArtist = (artist) => ({
 
 })
 
+export const receiveTopTracks = (tracks) => ({
+    type: 'RECEIVE_TOP_TRACKS',
+    tracks
+})
+
 export const updateCurrentArtistError = () => ({
     type: 'UPDATE_CURRENT_ARTIST_ERROR',
+})
+
+
+
+
+export const finishReceivingAllArtistInfo = (allInfo) => ({
+    type: 'UPDATE_ALL_ARTIST_INFO',
+    allInfo
+
 })
