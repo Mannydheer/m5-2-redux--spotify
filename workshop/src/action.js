@@ -10,7 +10,8 @@ export const receiveAccessToken = (token) => ({
 export const receiveAccessTokenError = () => ({
     type: 'RECEIVE_ACCESS_TOKEN_ERROR',
 });
-// ARTIST
+
+// --------------ARTIST--------------
 
 export const requestCurrentArtist = () => ({
     type: 'REQUEST_CURRENT_ARTIST'
@@ -21,21 +22,23 @@ export const updateCurrentArtist = (artist) => ({
     artist
 
 })
+export const receiveArtistInfoError = () => ({
+    type: 'RECEIVE_ARTIST_INFO_ERROR',
+})
+// --------------TRACKS--------------
 
 export const receiveTopTracks = (tracks) => ({
     type: 'RECEIVE_TOP_TRACKS',
     tracks
 })
-
-export const updateCurrentArtistError = () => ({
-    type: 'UPDATE_CURRENT_ARTIST_ERROR',
+// --------------RELATED ARTISTS--------------
+export const receiveRelatedArtists = (relatedArtists) => ({
+    type: 'RECEIVE_RELATED_ARTISTS',
+    relatedArtists
 })
-
-
-
+// --------------PROMISEALL - ALL DATA RECEIVED.--------------
 
 export const finishReceivingAllArtistInfo = (allInfo) => ({
     type: 'UPDATE_ALL_ARTIST_INFO',
     allInfo
-
 })

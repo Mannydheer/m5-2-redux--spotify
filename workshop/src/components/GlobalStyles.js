@@ -9,8 +9,9 @@ span {
   padding: 0;
   border: 0;
   vertical-align: baseline;
-  /* background-color: black;
-  color: white; */
+  
+  background-color: #0B0F14;
+  color: white;
 }
 
 /* GLOBAL STYLES */

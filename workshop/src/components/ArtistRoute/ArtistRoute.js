@@ -2,35 +2,39 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 // import { fetchArtistProfile } from '../../helpers/api-helpers';
 import { useParams } from 'react-router';
-import { fetchArtistProfile, fetchArtistTrack } from '../../helpers/api-helpers';
+import { fetchArtistProfile, fetchArtistTrack, fetchRelatedArtists } from '../../helpers/api-helpers';
 import { FollowerConverter } from '../../utils/utils';
 import {
   updateCurrentArtist,
-  updateCurrentArtistError,
+  receiveArtistInfoError,
   requestCurrentArtist,
   receiveTopTracks,
-  finishReceivingAllArtistInfo
+  finishReceivingAllArtistInfo,
+  receiveRelatedArtists
 } from '../../action';
 import styled from 'styled-components';
 import Track from './Track';
+import Loader from 'react-loader-spinner'
+import RelatedArtists from './RelatedArtists';
+
 
 const ArtistRoute = () => {
+  //Selectors
   const accessToken = useSelector(state => state.auth.token);
   const currentArtist = useSelector(artistState => artistState.artists.currentArtist.profile);
   const currentArtistTracks = useSelector(artistTracks => artistTracks.artists.currentArtist.tracks);
-  const loading = useSelector(artistLoading => artistLoading.artists)
+  const relatedArtists = useSelector(relatedArtists => relatedArtists.artists.currentArtist.relatedArtists);
+  const loading = useSelector(loading => loading.artists.status)
 
+  console.log(loading)
+  //useStates.
   const [play, setPlay] = useState(null);
-
-
-  console.log(currentArtistTracks)
-
   const [followNum, setFollowNum] = useState(null);
+
+  console.log(currentArtist)
 
 
   let { id } = useParams();
-
-  console.log(id)
   let dispatch = useDispatch();
 
 
@@ -46,23 +50,6 @@ const ArtistRoute = () => {
       //action will dispatch and switch status to loading for artist. 
       dispatch(requestCurrentArtist())
       const handleToken = async () => {
-        //ARTIST.
-        // try {
-        //   //action will update current artist profile with artist data. -//receiveArtistProfile
-        //   let response = await fetchArtistProfile(accessToken, id)
-        //   dispatch(updateCurrentArtist(response))
-        // }
-        // catch (error) {
-        //   dispatch(updateCurrentArtistError())
-        //   throw Error(error)
-        // }
-        // //TOP TRACKS.
-        // try {
-        //   let trackResponse = await fetchArtistTrack(accessToken, id)
-        // }
-        // catch (error) {
-        //   throw Error(error)
-        // }
         let response = await fetchArtistProfile(accessToken, id)
         if (response) {
           dispatch(updateCurrentArtist(response))
@@ -71,14 +58,17 @@ const ArtistRoute = () => {
         if (trackResponse) {
           dispatch(receiveTopTracks(trackResponse))
         }
-        //just to say that all the data is ready. 
-        Promise.all([response, trackResponse])
+        let relatedArtistResponse = await fetchRelatedArtists(accessToken, id)
+        if (relatedArtistResponse) {
+          dispatch(receiveRelatedArtists(relatedArtistResponse))
+        }
+        //if all the data is ready and everything is a reponse...
+        Promise.all([response, trackResponse, relatedArtistResponse])
           .then(() => {
             dispatch(finishReceivingAllArtistInfo())
           })
-          .catch(error => {
-            //dispatch errors
-            console.log('ERROR INSIDE PROMISEALL')
+          .catch(() => {
+            dispatch(receiveArtistInfoError())
           })
       }
 
@@ -88,39 +78,58 @@ const ArtistRoute = () => {
     else {
       return;
     }
-    //re-rendering on change of accessToken - every refetch
-  }, [accessToken])
+    //re-rendering on change of accessToken and id as we click though related artists.
+  }, [accessToken, id])
 
   return <React.Fragment>
-    {currentArtist !== null && currentArtistTracks !== undefined ?
-      <Wrapper>
+    <Wrapper>
+      {/* try torefactor with loading */}
+      {loading === 'success' ?
         <div>
-          <StyledArtistImage src={`${currentArtist.images[0].url}`}></StyledArtistImage>
-          <StyledArtistName>{currentArtist.name}</StyledArtistName>
-          <div><strong>{followNum !== null && followNum}</strong> followers</div>
+          <Header>
+            <StyledArtistImage src={`${currentArtist.images[0].url}`}></StyledArtistImage>
+            <StyledArtistName>{currentArtist.name}</StyledArtistName>
+            <StyledFollowers><strong style={{ color: '#ff4fd8' }}>{followNum !== null && followNum}</strong> followers</StyledFollowers>
+          </Header>
           <div>
             {/* playButton */}
-            {
-              currentArtistTracks.tracks.map((track, index) => {
-                //fix
-                if (track.preview_url !== null) {
-                  return (
-                    <Track track={track} play={play} setPlay={setPlay}></Track>
-                  )
+            <TrackWrapper>
+              <TrackTitle>Top Tracks</TrackTitle>
+              {
+                currentArtistTracks.tracks.map((track, index) => {
+                  //fix
+                  if (index < 3) {
+                    return (
+                      <Track track={track} play={play} setPlay={setPlay}></Track>
+                    )
+                  }
+                })}
+            </TrackWrapper>
+            {/* genres */}
+            <GenreWrapper >
+              {currentArtist.genres.map((genre, index) => {
+                if (index < 2) {
+                  return <StyledGenre key={index}>{genre}</StyledGenre>
                 }
               })}
-            {/* genres */}
-            {currentArtist.genres.map((genre, index) => {
-              if (index < 2) {
-                return <div key={index}>{genre}</div>
-              }
-            })}
+            </GenreWrapper>
+          </div>
+          <div>
+            <div>Related Artists</div>
+
+            <ImageWrapper>
+              {relatedArtists.artists.map((artist) => {
+                return (
+                  <RelatedArtists artist={artist}></RelatedArtists>
+                )
+              })}
+            </ImageWrapper>
           </div>
         </div>
-      </Wrapper>
-
-
-      : <div>{loading.status}</div>}
+        : <div>
+          <Loader type="Audio" color="#ff4fd8" height={100} width={80} />
+        </div>}
+    </Wrapper>
   </React.Fragment >
 };
 
@@ -136,16 +145,66 @@ align-items: center;
 line-height: 1.5;
 text-align: center;
 
+@media only screen and (max-width: 1200px) {
+width: 100vw;
+height: 100vh;
+  
+}
+
+`
+const ImageWrapper = styled.div`
+overflow: auto;
+white-space: nowrap;
+width: 30vw;
+
+
+@media only screen and (max-width: 1200px) {
+width: 100vw;
+
+  
+
+}
+
 `
 
 const StyledArtistImage = styled.img`
 border-radius: 50%;
 height: 200px;
 width: 200px;
+
 `
 const StyledArtistName = styled.h1`
+font-size: 40px;
+position: relative;
+bottom: 80px;
+`
 
-font-size: 30px;
+const StyledFollowers = styled.div`
+position: relative;
+bottom: 80px;
+`
 
+const GenreWrapper = styled.div`
+display: flex;
+justify-content: space-evenly;
+padding: 20px;
 
+`
+const StyledGenre = styled.div`
+width: 150px;
+background: rgba(75, 75, 75, 0.4);
+border-radius: 4px;
+padding: 10px;
+`
+const Header = styled.header`
+position: relative;
+top: 60px;
+`
+
+const TrackWrapper = styled.div`
+padding: 10px;
+`
+
+const TrackTitle = styled.div`
+padding: 20px;
 `

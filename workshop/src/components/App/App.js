@@ -9,12 +9,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { requestAccessToken, receiveAccessToken, receiveAccessTokenError } from '../../action';
 import ArtistRoute from '../ArtistRoute/ArtistRoute';
 import GlobalStyles from '../GlobalStyles';
+import styled from 'styled-components';
 
-const DEFAULT_ARTISTS_ID = '3TVXtAsR1Inumwj472S9r4';
+const DEFAULT_ARTISTS_ID = '4HzKw8XcD0piJmDrrPRCYk';
 
 //fetch for token
-
-
 
 const App = () => {
   const dispatch = useDispatch();
@@ -48,7 +47,9 @@ const App = () => {
     <GlobalStyles></GlobalStyles>
     <Switch>
       <Route exact path="/artists/:id">
-        <ArtistRoute DEFAULT_ARTISTS_ID={DEFAULT_ARTISTS_ID}></ArtistRoute>
+        <WrapperArtist>
+          <ArtistRoute></ArtistRoute>
+        </WrapperArtist>
       </Route>
       <Route exact path="/">
         <Redirect to={`/artists/${DEFAULT_ARTISTS_ID}`} />
@@ -64,3 +65,10 @@ const App = () => {
 };
 
 export default App;
+
+const WrapperArtist = styled.div`
+height: 100vh;
+width: 100vw;
+
+
+`

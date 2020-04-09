@@ -22,7 +22,7 @@ export default function artistsReducer(state = initialState,
                 // status: 'success',
             }
         }
-        case 'UPDATE_CURRENT_ARTIST_ERROR': {
+        case 'RECEIVE_ARTIST_INFO_ERROR': {
             return {
                 ...state,
                 status: 'error'
@@ -35,10 +35,17 @@ export default function artistsReducer(state = initialState,
                 ...stateCopy,
             }
         }
+        case 'RECEIVE_RELATED_ARTISTS': {
+            let stateCopy = { ...state }
+            stateCopy.currentArtist.relatedArtists = action.relatedArtists
+            return {
+                ...stateCopy
+            }
+        }
         case 'UPDATE_ALL_ARTIST_INFO': {
             return {
                 ...state,
-                status: 'idle'
+                status: 'success'
             }
         }
         default: {
