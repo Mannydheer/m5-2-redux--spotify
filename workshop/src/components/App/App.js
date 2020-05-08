@@ -19,9 +19,7 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-
     dispatch(requestAccessToken())
-
     const handleToken = async () => {
       try {
         let response = await fetch('/spotify_access_token');
@@ -41,7 +39,6 @@ const App = () => {
     }
     handleToken();
   }, [])
-
 
   return <Router>
     <GlobalStyles></GlobalStyles>

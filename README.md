@@ -276,10 +276,8 @@ Create a few new files:
 - `src/actions.js`
 
 For this workshop, here are the types of data we'll be dealing with:
-
 - We need to hit our server to get an API key
 - We need to hit Spotify's API to get artist information
-
 These fall into two broad categories: `auth` and `artists`. Here's a depiction of what our state will look like:
 
 ```js
@@ -344,7 +342,6 @@ export default function configureStore(initialState) {
     initialState,
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   );
-
   return store;
 }
 ```
@@ -361,9 +358,7 @@ import ReactDOM from 'react-dom';
 +import { Provider } from 'react-redux';
 
 +import configureStore from './store';
-
 import App from './components/App';
-
 +const store = configureStore();
 
 ReactDOM.render(
@@ -576,7 +571,8 @@ Use the `useSelector` hook from the `react-redux` package to select it:
 ```js
 // ArtistRoute.js
 const ArtistRoute = () => {
-  const accessToken = useSelector((state) => state.auth.token);
+  const accessToken = useSelector(
+    (state) => state.auth.token);
 
   return accessToken;
 };
@@ -753,29 +749,17 @@ In the end, you should have something like this:
 ---
 
 ## Exercise 6: Design from Figma
-
 The design for this application lives on Figma, a design tool (similar to Adobe Illustrator).
-
 You can access the design here: https://www.figma.com/file/VAYO9Ezmxx4fMR29Sgylck/Spotify-App?node-id=0%3A1
-
 Figma is a great tool for developers because it _gives you_ many of the details you would otherwise have to infer from a screenshot. For example, the side-panel gives you access to a set of "local styles":
-
 ![Figma side-panel](./__lecture/assets/figma-styles.png)
-
 When you mouse over a color, a little "Settings" icon appears on the right. Click that icon, and it will give you the hex color code for that color:
-
 ![Figma color code](./__lecture/assets/figma-color-code.png)
-
 You can also click on individual elements to see their dimensions. If you hold `option` on Mac, `alt` on Windows, you'll be able to see the distances between adjacent elements. We can use this to determine our "margin":
-
 ![Figma distances](./__lecture/assets/figma-distances.gif)
-
 Use the Figma design to style your artist profile. It should follow the design as closely as possible, and look something like this:
-
 <img src="./__lecture/assets/designed-mvp.png" alt="Finished app" />
-
 ---
-
 # Stretch Goals
 
 This project has many stretch goals! If you find yourself with some time to spare, head on over to STRETCH.md and get started there =)

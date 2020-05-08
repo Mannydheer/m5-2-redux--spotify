@@ -71,7 +71,6 @@ const ArtistRoute = () => {
             dispatch(receiveArtistInfoError())
           })
       }
-
       handleToken();
     }
     //return nothign if all fails
@@ -136,8 +135,6 @@ const ArtistRoute = () => {
 export default ArtistRoute;
 
 const Wrapper = styled.div`
-background-color: black;
-color: white;
 height: 100vh;
 display: flex;
 justify-content: center;
@@ -148,7 +145,7 @@ text-align: center;
 @media only screen and (max-width: 1200px) {
 width: 100vw;
 height: 100vh;
-  
+
 }
 
 `
