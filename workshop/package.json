@@ -2,7 +2,7 @@
   "name": "react-workshop-spotify-client",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:5678",
+  "homepage": ".",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

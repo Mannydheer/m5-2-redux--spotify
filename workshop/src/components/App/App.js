@@ -22,7 +22,9 @@ const App = () => {
     dispatch(requestAccessToken())
     const handleToken = async () => {
       try {
-        let response = await fetch('/spotify_access_token');
+        let response = await fetch('https://spotify-coding-bootcamp.herokuapp.com/spotify_access_token');
+
+        console.log(response)
         if (response.status === 200) {
           let token = await response.json();
           dispatch(receiveAccessToken(token.access_token))
