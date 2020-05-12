@@ -39,6 +39,8 @@ const ArtistRoute = () => {
 
 
   useEffect(() => {
+
+    console.log(currentArtist)
     if (currentArtist !== null) {
       let value = FollowerConverter(currentArtist.followers.total)
       setFollowNum(value)
