@@ -13,9 +13,6 @@ app.use(bodyParser.json());
 app.get('/spotify_access_token', async (req, res, next) => {
   const clientId = process.env.SPOTIFY_CLIENT_ID;
   const clientSecret = process.env.SPOTIFY_SECRET;
-
-  console.log(clientId)
-
   // We need, annoyingly, a base64-encoded string of our id:secret, for spotify.
   // We can use Buffers to do this for us.
   const authString = Buffer.from(clientId + ':' + clientSecret).toString(
@@ -31,8 +28,7 @@ app.get('/spotify_access_token', async (req, res, next) => {
   })
   let token = await responseToken.json();
   res.send(token)
-  // TODO: use authString in a request to Spotify!
-  // res.send({ todo: true });
+
 });
 
 app.listen(port, function (error) {
